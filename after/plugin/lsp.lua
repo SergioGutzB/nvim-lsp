@@ -1,4 +1,12 @@
+vim.lsp.set_log_level('debug')
+
+vim.g.lsp_zero_extend_cmp = 0
+vim.g.lsp_zero_extend_lspconfig = 0
+
 local lsp = require('lsp-zero')
+local status, nvim_lsp = pcall(require, "lspconfig")
+
+if (not status) then return end
 
 lsp.preset('recommended')
 
@@ -7,6 +15,7 @@ lsp.ensure_installed({
   'eslint',
   'rust_analyzer',
   'tailwindcss',
+  'lua_ls',
   'ltex',
   'vtsls',
   'yamlls',
@@ -46,7 +55,7 @@ lsp.setup_nvim_cmp({
 lsp.set_preferences({
   suggest_lsp_servers = false,
   setup_servers_on_start = true,
-  -- set_lsp_keymaps = true,
+  set_lsp_keymaps = true,
   configure_diagnostics = true,
   cmp_capabilities = true,
   manage_nvim_cmp = true,
@@ -59,14 +68,12 @@ lsp.set_preferences({
   }
 })
 
-
-
 lsp.on_attach(function(client, bufnr)
-  print("help")
+  print("help on attach")
   local opts = { buffer = bufnr, remap = false }
 
   lsp.default_keymaps({buffer = bufnr})
-  lsp.buffer_autoformat()
+  -- lsp.buffer_autoformat()
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
@@ -82,11 +89,48 @@ lsp.on_attach(function(client, bufnr)
 
 end)
 
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
-local cmp_config = require('lsp-zero').defaults.cmp_config({})
-cmp.setup(cmp_config)
+-- local lsp_zero = require('lsp-zero.api')
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-lsp.setup_servers({'tsserver', 'eslint', force = true, })
+nvim_lsp.tsserver.setup({
+  capabilities = lsp_capabilities,
+  on_attach = function(client, bufnr)
+    client.resolved_capabilities.document_formatting = true,
+    lsp.default_keymaps({buffer = bufnr})
+  end,
+  filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+  cmd = { "typescript-language-server", "--stdio" },
+  settings = {
+    format = {
+      enable = false,
+      formatter = 'prettier'
+    }
+  }
+})
+
+nvim_lsp.sourcekit.setup({
+  on_attach = function(client, bufnr)
+    lsp.default_keymaps({buffer = bufnr})
+  end
+})
+ 
+vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
+-- local cmp_config = lsp.defaults.cmp_config({})
+cmp.setup({
+  sources = {
+    {name = 'nvim_lsp'}
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-Space>'] = cmp.mapping.complete(),
+  }),
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+})
+
+lsp.setup_servers({'eslint', 'lua_ls', 'rust_analyzer',  force = true, })
 
 local lsp_flags = {
   -- This is the default in Nvim 0.7+

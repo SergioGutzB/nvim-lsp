@@ -16,7 +16,7 @@ packer.startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'nvim-lua/plenary.nvim'
   use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.0',
+    'nvim-telescope/telescope.nvim', tag = '0.1.4',
     -- or                            , branch = '0.1.x',
     requires = { { 'nvim-lua/plenary.nvim' } }
   }
@@ -58,9 +58,9 @@ packer.startup(function(use)
     'VonHeikemen/lsp-zero.nvim',
     requires = {
       -- LSP Support
-      { 'neovim/nvim-lspconfig' },
       { 'williamboman/mason.nvim' },
       { 'williamboman/mason-lspconfig.nvim' },
+      { 'neovim/nvim-lspconfig' },
 
       -- Autocompletion
       { 'hrsh7th/nvim-cmp' },

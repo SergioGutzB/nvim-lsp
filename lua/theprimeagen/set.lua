@@ -34,3 +34,15 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "120"
+
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.listchars = {
+  tab = "║ ",
+  eol = "¬",
+      trail = '.'
+}
+vim.opt.list = true
+
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
