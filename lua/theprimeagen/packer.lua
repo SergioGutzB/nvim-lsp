@@ -36,12 +36,14 @@ packer.startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
     config = function()
       require("trouble").setup {
-        icons = false,
+        icons = true,
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
       }
-    end
+    end,
+    'folke/lsp-trouble.nvim',
+    'folke/lsp-colors.nvim',
   }
 
 
@@ -92,6 +94,10 @@ packer.startup(function(use)
   use('terrortylor/nvim-comment')
 
   use {
+    "rstacruz/vim-closer", -- Opcional, solo si deseas mejorar el cierre de paréntesis y comillas
+  }
+
+  use {
   "folke/which-key.nvim",
   config = function()
     vim.o.timeout = true
@@ -102,7 +108,17 @@ packer.startup(function(use)
       -- refer to the configuration section below
     }
   end
-}
+  }
+
+  -- debug
+  use 'mfussenegger/nvim-dap'
+  use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+  use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
+  use {
+    "microsoft/vscode-js-debug",
+    opt = true,
+    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out" 
+  }
 
   use({
 	"L3MON4D3/LuaSnip",

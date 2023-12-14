@@ -95,14 +95,22 @@ local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 nvim_lsp.tsserver.setup({
   capabilities = lsp_capabilities,
   on_attach = function(client, bufnr)
-    client.resolved_capabilities.document_formatting = true,
+    client.resolved_capabilities.document_formatting = true
+
+    -- Configuración del resaltado de errores en las variables
+    client.resolved_capabilities.spell_checker.variables = true
+    client.resolved_capabilities.document_formatting = true
+
+    -- Configuración del estilo del resaltado de errores
+    client.resolved_capabilities.spell_checker.error_highlight = '#FFA07A'
+
     lsp.default_keymaps({buffer = bufnr})
   end,
   filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
   cmd = { "typescript-language-server", "--stdio" },
   settings = {
     format = {
-      enable = false,
+      enable = true,
       formatter = 'prettier'
     }
   }
@@ -113,7 +121,7 @@ nvim_lsp.sourcekit.setup({
     lsp.default_keymaps({buffer = bufnr})
   end
 })
- 
+
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 -- local cmp_config = lsp.defaults.cmp_config({})
 cmp.setup({

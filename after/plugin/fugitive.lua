@@ -27,3 +27,5 @@ autocmd("BufWinEnter", {
         vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
     end,
 })
+
+vim.api.nvim_set_keymap('n', '<leader>gb', '<Cmd>Git blame<CR>', { noremap = true, silent = true })
